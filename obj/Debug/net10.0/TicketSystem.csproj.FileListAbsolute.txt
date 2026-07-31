@@ -1,0 +1,14 @@
+C:\DEV\C#\TicketSystem\bin\Debug\net10.0\TicketSystem.exe
+C:\DEV\C#\TicketSystem\bin\Debug\net10.0\TicketSystem.deps.json
+C:\DEV\C#\TicketSystem\bin\Debug\net10.0\TicketSystem.runtimeconfig.json
+C:\DEV\C#\TicketSystem\bin\Debug\net10.0\TicketSystem.dll
+C:\DEV\C#\TicketSystem\bin\Debug\net10.0\TicketSystem.pdb
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\TicketSystem.GeneratedMSBuildEditorConfig.editorconfig
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\TicketSystem.AssemblyInfoInputs.cache
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\TicketSystem.AssemblyInfo.cs
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\TicketSystem.csproj.CoreCompileInputs.cache
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\TicketSystem.dll
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\refint\TicketSystem.dll
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\TicketSystem.pdb
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\TicketSystem.genruntimeconfig.cache
+C:\DEV\C#\TicketSystem\obj\Debug\net10.0\ref\TicketSystem.dll
