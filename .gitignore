@@ -1,0 +1,9 @@
+bin/
+obj/
+*.db
+*.sqlite
+*.sqlite3
+.vs/
+*.user
+*.suo
+*.pdb
