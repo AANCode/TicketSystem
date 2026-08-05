@@ -1,31 +1,14 @@
 ﻿using Microsoft.Data.Sqlite;
 
-
-using var connection = new SqliteConnection("Data Source=support.db");
-connection.Open();
-
-
-string sql = @"
-    CREATE TABLE IF NOT EXISTS Tickets (
-        Id INTEGER PRIMARY KEY AUTOINCREMENT,
-        Title TEXT NOT NULL,
-        Description TEXT,
-        Status INTEGER NOT NULL
-    );
-";
-
-using var command = new SqliteCommand(sql, connection);
-command.ExecuteNonQuery();
-
-Console.WriteLine("Database og tabell er opprettet");
-
+var repository = new TicketRepository();
+repository.InitializeDatabase();
 
 string titleVariable = " ";
 string descriptionVariable = " ";
 string statusVariable = " ";
 
 string idVariable = " ";
-string nyStatus = " ";
+string newStatus = " ";
 
 
 string valg = " ";
@@ -47,20 +30,14 @@ while(valg != "0")
 
             Console.WriteLine("Skriv inn Status til saken(Skriv 0 for nye saker): ");
             statusVariable = Console.ReadLine();
-
-
-            string insertsql = @"
-            INSERT INTO Tickets (Title, Description, Status)
-            VALUES (@title, @description, @status);
-            ";
-
-            using var insertcommand = new SqliteCommand(insertsql, connection);
-            insertcommand.Parameters.AddWithValue("@title", titleVariable);
-            insertcommand.Parameters.AddWithValue("@description", descriptionVariable);
-            insertcommand.Parameters.AddWithValue("@status", statusVariable);
-            insertcommand.ExecuteNonQuery();
-
-            Console.WriteLine("Saken har blitt lagt inn i Databasen");
+            if (int.TryParse(statusVariable, out int statusNr))
+            {
+                repository.AddTicket(titleVariable, descriptionVariable, statusNr);  
+            }
+            else
+            {
+                Console.WriteLine("Ugyldig inndata");
+            }
 
             break;
         }
@@ -71,35 +48,28 @@ while(valg != "0")
             idVariable = Console.ReadLine();
             
             Console.WriteLine("hva er den nye statusen?: ");
-            nyStatus = Console.ReadLine();
+            newStatus = Console.ReadLine();
+            if (int.TryParse(newStatus, out int statusNr) && int.TryParse(idVariable, out int IdNr))
+            {
+                repository.UpdateStatus(IdNr, statusNr);
+            }
+            else
+            {
+                Console.WriteLine("Ugyldig inndata");
+            }
 
-
-            string updatesql = @"
-            UPDATE Tickets SET Status = @status WHERE Id = @id;
-            ";
-
-            using var updateCommand = new SqliteCommand(updatesql, connection);
-            updateCommand.Parameters.AddWithValue("@status", nyStatus);
-            updateCommand.Parameters.AddWithValue("@id", idVariable);
-            updateCommand.ExecuteNonQuery();
+            
 
             break;
         }
 
         case "3":
         {    
-            string readersql =@"
-                SELECT* FROM Tickets;
-            ";
-
-            using var selectCommand = new SqliteCommand(readersql, connection);
-            using var reader = selectCommand.ExecuteReader();
-
-            while (reader.Read())
-            {
-                Console.WriteLine($"ID: {reader["Id"]}, Title: {reader["Title"]}, Description: {reader["Description"]}, Status: {reader["Status"]}");
-            }
-
+            var tickets = repository.GetAllTickets();
+            foreach (var ticket in tickets)
+                {
+                    Console.WriteLine($"Id: {ticket.Id}, Title: {ticket.Title}, Description: {ticket.Description}, Status: {ticket.Status}");
+                }
             break;
         }
 
@@ -108,13 +78,15 @@ while(valg != "0")
             Console.WriteLine("Hva er ID-en til saken du vil slette");
             idVariable = Console.ReadLine();
 
-            string deletesql = @"
-                DELETE FROM Tickets WHERE Id = @id;
-            ";
-
-            using var deleteCommand = new SqliteCommand(deletesql, connection);
-            deleteCommand.Parameters.AddWithValue("@id", idVariable);
-            deleteCommand.ExecuteNonQuery();
+            if (int.TryParse(idVariable, out int IdNr))
+            {
+                repository.DeleteTicket(IdNr);
+            }
+            else
+            {
+                Console.WriteLine("Ugyldig inndata");
+            }
+            
 
             break;
         }
