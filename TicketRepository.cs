@@ -26,7 +26,7 @@ public class TicketRepository
         Console.WriteLine("Database og tabell er opprettet");
     }
 
-    public void AddTicket(string title, string description, int status)
+    public void AddTicket(string title, string description, TicketStatus status)
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
@@ -45,7 +45,7 @@ public class TicketRepository
         Console.WriteLine("Saken har blitt lagt inn i Databasen");
     }
 
-    public void UpdateStatus(int id, int newStatus)
+    public void UpdateStatus(int id, TicketStatus newStatus)
     {
         using var connection = new SqliteConnection(_connectionString);
         connection.Open();
@@ -54,10 +54,10 @@ public class TicketRepository
             UPDATE Tickets SET Status = @status WHERE Id = @id;
             ";
 
-            using var updateCommand = new SqliteCommand(updatesql, connection);
-            updateCommand.Parameters.AddWithValue("@status", newStatus);
-            updateCommand.Parameters.AddWithValue("@id", id);
-            updateCommand.ExecuteNonQuery();
+        using var updateCommand = new SqliteCommand(updatesql, connection);
+        updateCommand.Parameters.AddWithValue("@status", newStatus);
+        updateCommand.Parameters.AddWithValue("@id", id);
+        updateCommand.ExecuteNonQuery();
     }
 
     public List<Ticket> GetAllTickets()
@@ -81,7 +81,7 @@ public class TicketRepository
                 Id = Convert.ToInt32(reader["Id"]),
                 Title = reader["Title"].ToString(),
                 Description = reader["Description"].ToString(),
-                Status = Convert.ToInt32(reader["Status"])
+                Status = (TicketStatus)Convert.ToInt32(reader["Status"])
             };
 
             tickets.Add(ticket);

@@ -3,15 +3,8 @@
 var repository = new TicketRepository();
 repository.InitializeDatabase();
 
-string titleVariable = " ";
-string descriptionVariable = " ";
-string statusVariable = " ";
 
-string idVariable = " ";
-string newStatus = " ";
-
-
-string valg = " ";
+string? valg = "";
 
 while(valg != "0")
 {
@@ -22,76 +15,115 @@ while(valg != "0")
     {
         case "1":
         {
-            Console.WriteLine("Skriv inn Titlen til saken: ");
-            titleVariable = Console.ReadLine();
-
-            Console.WriteLine("Skriv inn Beskrivelse til saken: ");
-            descriptionVariable = Console.ReadLine();
-
-            Console.WriteLine("Skriv inn Status til saken(Skriv 0 for nye saker): ");
-            statusVariable = Console.ReadLine();
-            if (int.TryParse(statusVariable, out int statusNr))
-            {
-                repository.AddTicket(titleVariable, descriptionVariable, statusNr);  
-            }
-            else
-            {
-                Console.WriteLine("Ugyldig inndata");
-            }
-
+            HandleCreateTicket();
             break;
         }
     
         case "2":
         {
-            Console.WriteLine("Hva er ID-en til saken du vil redigere");
-            idVariable = Console.ReadLine();
-            
-            Console.WriteLine("hva er den nye statusen?: ");
-            newStatus = Console.ReadLine();
-            if (int.TryParse(newStatus, out int statusNr) && int.TryParse(idVariable, out int IdNr))
-            {
-                repository.UpdateStatus(IdNr, statusNr);
-            }
-            else
-            {
-                Console.WriteLine("Ugyldig inndata");
-            }
-
-            
-
+            HandleUpdateTicket();
             break;
         }
 
         case "3":
         {    
-            var tickets = repository.GetAllTickets();
-            foreach (var ticket in tickets)
-                {
-                    Console.WriteLine($"Id: {ticket.Id}, Title: {ticket.Title}, Description: {ticket.Description}, Status: {ticket.Status}");
-                }
+            HandleShowAllTickets();
             break;
         }
 
         case "4":
         {
-            Console.WriteLine("Hva er ID-en til saken du vil slette");
-            idVariable = Console.ReadLine();
-
-            if (int.TryParse(idVariable, out int IdNr))
-            {
-                repository.DeleteTicket(IdNr);
-            }
-            else
-            {
-                Console.WriteLine("Ugyldig inndata");
-            }
-            
-
+            HandleDeleteTicket();
             break;
         }
         default:
         Console.WriteLine("Ugylidig valg");
         break;
+    }
+
+
+
+
+    void PrintStatusMenu()
+    {
+        foreach (var status in Enum.GetValues<TicketStatus>())
+        {
+            Console.WriteLine ($"{(int)status} = {status}");
+        }
+    }
+    
+    TicketStatus GetValidStatusFromUser()
+    {
+        while (true)
+        {
+            Console.WriteLine($"Velg status:");
+            PrintStatusMenu();
+            string userInput = Console.ReadLine();
+
+            if (int.TryParse(userInput, out int statusNr) && Enum.IsDefined(typeof(TicketStatus), statusNr))
+            {
+             return (TicketStatus)statusNr;
+            }
+            else
+            {
+                Console.WriteLine("Ugyldig status, Du må velge et av de gyldige altenativene");
+            }
+        }
+
+    }
+
+    void HandleCreateTicket()
+    {
+        Console.WriteLine("Skriv inn Titlen til saken: ");
+        string? titleVariable = Console.ReadLine();
+
+        Console.WriteLine("Skriv inn Beskrivelse til saken: ");
+        string? descriptionVariable = Console.ReadLine();
+
+            
+        TicketStatus valgstatus = GetValidStatusFromUser();
+        repository.AddTicket(titleVariable, descriptionVariable, valgstatus);
+    }
+
+    void HandleUpdateTicket()
+    {
+        Console.WriteLine("Hva er ID-en til saken du vil redigere");
+        string? idVariable = Console.ReadLine();
+
+
+        if (int.TryParse(idVariable, out int IdNr))
+        {
+            TicketStatus valgstatus = GetValidStatusFromUser();
+            repository.UpdateStatus(IdNr, valgstatus);
+        }
+        else
+        {
+            Console.WriteLine("Ugyldig Id.");
+        } 
+    }
+
+    void HandleShowAllTickets()
+    {
+        var tickets = repository.GetAllTickets();
+        foreach (var ticket in tickets)
+        {
+            Console.WriteLine($"Id: {ticket.Id}, Title: {ticket.Title}, Description: {ticket.Description}, Status: {ticket.Status}");
+        }
+    }
+
+    void HandleDeleteTicket()
+    {
+        
+        Console.WriteLine("Hva er ID-en til saken du vil slette");
+        string? idVariable = Console.ReadLine();
+
+        if (int.TryParse(idVariable, out int IdNr))
+        {
+            repository.DeleteTicket(IdNr);
+        }
+        else
+        {
+            Console.WriteLine("Ugyldig inndata");
+        }
     }
 }
