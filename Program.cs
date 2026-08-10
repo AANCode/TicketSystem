@@ -1,17 +1,17 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.Data.Sqlite;
 
 var repository = new TicketRepository();
 repository.InitializeDatabase();
 
-
 string? valg = "";
 
-while(valg != "0")
+while (valg != "0")
 {
     Console.WriteLine("Hvilken oppgave skal du utføre:\n 1 for å opprette en ny sak \n 2 for å oppdatere en sak \n 3 for å se alle saker \n 4 for å slette saker \n 0 for å avslutte programmet");
     valg = Console.ReadLine();
 
-    switch(valg)
+    switch (valg)
     {
         case "1":
         {
@@ -86,8 +86,9 @@ while(valg != "0")
         {
         TicketStatus valgstatus = GetValidStatusFromUser();
         repository.AddTicket(titleVariable, descriptionVariable, valgstatus);
+        Console.Write("Saken har blitt opprettet");
         }
-        catch(SqliteException ex)
+        catch (SqliteException ex)
         {
             Console.WriteLine($"Det har skjedd en feil: {ex.Message}");
         }
@@ -103,8 +104,16 @@ while(valg != "0")
         {
             try
             {
-            TicketStatus valgstatus = GetValidStatusFromUser();
-            repository.UpdateStatus(IdNr, valgstatus);
+                TicketStatus valgstatus = GetValidStatusFromUser();
+                bool isUpdated = repository.UpdateStatus(IdNr, valgstatus);
+                if (isUpdated)
+                {
+                    Console.WriteLine($"saken med id: {IdNr} har blitt oppdatert");  
+                }
+                else
+                {
+                    Console.WriteLine($"saken med ID: {IdNr} ble IKKE funnet");
+                }
             }
             catch (SqliteException ex)
             {
@@ -145,7 +154,16 @@ while(valg != "0")
         {
             try
             {
-                repository.DeleteTicket(IdNr);
+                bool isDeleted = repository.DeleteTicket(IdNr);
+                if (isDeleted)
+                {
+                    Console.WriteLine($"saken med ID: {IdNr} har blitt slettet");
+                }
+                else
+                {
+                    Console.WriteLine($"saken med ID: {IdNr} ble IKKE funnet");
+                }
+                
             }
             catch (SqliteException ex)
             {

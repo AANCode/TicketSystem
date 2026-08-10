@@ -4,11 +4,18 @@ using Microsoft.VisualBasic;
 public class TicketRepository
 {
     private readonly string _connectionString = "Data Source=support.db";
+    private SqliteConnection GetConnection()
+    {
+        var connection = new SqliteConnection(_connectionString);
+        connection.Open();
+
+        return connection;
+    }
+
 
     public void InitializeDatabase()
     {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
+        using SqliteConnection connection = GetConnection();
 
 
         string sql = @"
@@ -22,14 +29,12 @@ public class TicketRepository
 
         using var command = new SqliteCommand(sql, connection);
         command.ExecuteNonQuery();
-
-        Console.WriteLine("Database og tabell er opprettet");
     }
+
 
     public void AddTicket(string title, string description, TicketStatus status)
     {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
+        using SqliteConnection connection = GetConnection();
 
         string insertsql = @"
             INSERT INTO Tickets (Title, Description, Status)
@@ -41,14 +46,12 @@ public class TicketRepository
         insertcommand.Parameters.AddWithValue("@description", description);
         insertcommand.Parameters.AddWithValue("@status", status);
         insertcommand.ExecuteNonQuery();
-
-        Console.WriteLine("Saken har blitt lagt inn i Databasen");
     }
 
-    public void UpdateStatus(int id, TicketStatus newStatus)
+
+    public bool UpdateStatus(int id, TicketStatus newStatus)
     {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
+        using SqliteConnection connection = GetConnection();
 
         string updatesql = @"
             UPDATE Tickets SET Status = @status WHERE Id = @id;
@@ -57,14 +60,16 @@ public class TicketRepository
         using var updateCommand = new SqliteCommand(updatesql, connection);
         updateCommand.Parameters.AddWithValue("@status", newStatus);
         updateCommand.Parameters.AddWithValue("@id", id);
-        updateCommand.ExecuteNonQuery();
+        int rowsAffected = updateCommand.ExecuteNonQuery();
+
+        return rowsAffected > 0;
     }
+
 
     public List<Ticket> GetAllTickets()
     {
         
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
+        using SqliteConnection connection = GetConnection();
 
         string readersql =@"
             SELECT* FROM Tickets;
@@ -84,27 +89,26 @@ public class TicketRepository
                 Status = (TicketStatus)Convert.ToInt32(reader["Status"])
             };
 
-            tickets.Add(ticket);
-
-            
+            tickets.Add(ticket);  
         }
 
         return tickets;
     }
 
-    public void DeleteTicket(int id)
-    {
-        using var connection = new SqliteConnection(_connectionString);
-        connection.Open();
 
+    public bool DeleteTicket(int id)
+    {
+        using SqliteConnection connection = GetConnection();
 
         string deletesql = @"
                 DELETE FROM Tickets WHERE Id = @id;
             ";
 
-            using var deleteCommand = new SqliteCommand(deletesql, connection);
-            deleteCommand.Parameters.AddWithValue("@id", id);
-            deleteCommand.ExecuteNonQuery();
+        using var deleteCommand = new SqliteCommand(deletesql, connection);
+        deleteCommand.Parameters.AddWithValue("@id", id);
+        int rowsAffected = deleteCommand.ExecuteNonQuery();
+
+        return rowsAffected > 0;
     }
 
     
