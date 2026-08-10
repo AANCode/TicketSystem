@@ -22,6 +22,7 @@ while(valg != "0")
         case "2":
         {
             HandleUpdateTicket();
+            
             break;
         }
 
@@ -80,9 +81,16 @@ while(valg != "0")
         Console.WriteLine("Skriv inn Beskrivelse til saken: ");
         string? descriptionVariable = Console.ReadLine();
 
-            
+        
+        try
+        {
         TicketStatus valgstatus = GetValidStatusFromUser();
         repository.AddTicket(titleVariable, descriptionVariable, valgstatus);
+        }
+        catch(SqliteException ex)
+        {
+            Console.WriteLine($"Det har skjedd en feil: {ex.Message}");
+        }
     }
 
     void HandleUpdateTicket()
@@ -93,8 +101,15 @@ while(valg != "0")
 
         if (int.TryParse(idVariable, out int IdNr))
         {
+            try
+            {
             TicketStatus valgstatus = GetValidStatusFromUser();
             repository.UpdateStatus(IdNr, valgstatus);
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Det har skjedd en feil: {ex.Message}");
+            }
         }
         else
         {
@@ -104,11 +119,20 @@ while(valg != "0")
 
     void HandleShowAllTickets()
     {
-        var tickets = repository.GetAllTickets();
-        foreach (var ticket in tickets)
+        try
         {
-            Console.WriteLine($"Id: {ticket.Id}, Title: {ticket.Title}, Description: {ticket.Description}, Status: {ticket.Status}");
+            var tickets = repository.GetAllTickets();
+            foreach (var ticket in tickets)
+            {
+                Console.WriteLine($"Id: {ticket.Id}, Title: {ticket.Title}, Description: {ticket.Description}, Status: {ticket.Status}");
+            }
         }
+        catch (SqliteException ex)
+        {
+            Console.WriteLine($"Det har skjedd en feil: {ex.Message}");
+        }
+
+        
     }
 
     void HandleDeleteTicket()
@@ -119,7 +143,14 @@ while(valg != "0")
 
         if (int.TryParse(idVariable, out int IdNr))
         {
-            repository.DeleteTicket(IdNr);
+            try
+            {
+                repository.DeleteTicket(IdNr);
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Det har skjedd en feil: {ex.Message}");
+            }
         }
         else
         {
