@@ -2,14 +2,14 @@
 using Microsoft.Data.Sqlite;
 
 var repository = new TicketRepository();
+var consoleView = new ConsoleView();
 repository.InitializeDatabase();
 
 string? valg = "";
 
 while (valg != "0")
 {
-    Console.WriteLine("Hvilken oppgave skal du utføre:\n 1 for å opprette en ny sak \n 2 for å oppdatere en sak \n 3 for å se alle saker \n 4 for å slette saker \n 0 for å avslutte programmet");
-    valg = Console.ReadLine();
+    valg = consoleView.GetMainMenuChoice();
 
     switch (valg)
     {
@@ -38,11 +38,9 @@ while (valg != "0")
             break;
         }
         default:
-        Console.WriteLine("Ugylidig valg");
+            Console.WriteLine("Ugylidig valg");
         break;
     }
-
-
 
 
     void PrintStatusMenu()
@@ -53,6 +51,7 @@ while (valg != "0")
         }
     }
     
+
     TicketStatus GetValidStatusFromUser()
     {
         while (true)
@@ -73,13 +72,11 @@ while (valg != "0")
 
     }
 
+
     void HandleCreateTicket()
     {
-        Console.WriteLine("Skriv inn Titlen til saken: ");
-        string? titleVariable = Console.ReadLine();
-
-        Console.WriteLine("Skriv inn Beskrivelse til saken: ");
-        string? descriptionVariable = Console.ReadLine();
+        string? titleVariable = consoleView.GetTicketTitle();
+        string? descriptionVariable = consoleView.GetTicketDescription();
 
         
         try
@@ -94,10 +91,11 @@ while (valg != "0")
         }
     }
 
+
     void HandleUpdateTicket()
     {
         Console.WriteLine("Hva er ID-en til saken du vil redigere");
-        string? idVariable = Console.ReadLine();
+        string? idVariable = consoleView.GetTicketId();
 
 
         if (int.TryParse(idVariable, out int IdNr))
@@ -126,6 +124,7 @@ while (valg != "0")
         } 
     }
 
+
     void HandleShowAllTickets()
     {
         try
@@ -143,6 +142,7 @@ while (valg != "0")
 
         
     }
+
 
     void HandleDeleteTicket()
     {
