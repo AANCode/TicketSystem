@@ -14,62 +14,32 @@ while (valg != "0")
     switch (valg)
     {
         case "1":
-        {
-            HandleCreateTicket();
-            break;
-        }
-    
+            {
+                HandleCreateTicket();
+                break;
+            }
+
         case "2":
-        {
-            HandleUpdateTicket();
-            
-            break;
-        }
+            {
+                HandleUpdateTicket();
+
+                break;
+            }
 
         case "3":
-        {    
-            HandleShowAllTickets();
-            break;
-        }
+            {
+                HandleShowAllTickets();
+                break;
+            }
 
         case "4":
-        {
-            HandleDeleteTicket();
-            break;
-        }
+            {
+                HandleDeleteTicket();
+                break;
+            }
         default:
             Console.WriteLine("Ugylidig valg");
-        break;
-    }
-
-
-    void PrintStatusMenu()
-    {
-        foreach (var status in Enum.GetValues<TicketStatus>())
-        {
-            Console.WriteLine ($"{(int)status} = {status}");
-        }
-    }
-    
-
-    TicketStatus GetValidStatusFromUser()
-    {
-        while (true)
-        {
-            Console.WriteLine($"Velg status:");
-            PrintStatusMenu();
-            string userInput = Console.ReadLine();
-
-            if (int.TryParse(userInput, out int statusNr) && Enum.IsDefined(typeof(TicketStatus), statusNr))
-            {
-             return (TicketStatus)statusNr;
-            }
-            else
-            {
-                Console.WriteLine("Ugyldig status, Du må velge et av de gyldige altenativene");
-            }
-        }
-
+            break;
     }
 
 
@@ -78,12 +48,12 @@ while (valg != "0")
         string? titleVariable = consoleView.GetTicketTitle();
         string? descriptionVariable = consoleView.GetTicketDescription();
 
-        
+
         try
         {
-        TicketStatus valgstatus = GetValidStatusFromUser();
-        repository.AddTicket(titleVariable, descriptionVariable, valgstatus);
-        Console.Write("Saken har blitt opprettet");
+            TicketStatus valgstatus = consoleView.GetValidStatusFromUser();
+            repository.AddTicket(titleVariable, descriptionVariable, valgstatus);
+            Console.Write("Saken har blitt opprettet");
         }
         catch (SqliteException ex)
         {
@@ -102,11 +72,11 @@ while (valg != "0")
         {
             try
             {
-                TicketStatus valgstatus = GetValidStatusFromUser();
+                TicketStatus valgstatus = consoleView.GetValidStatusFromUser();
                 bool isUpdated = repository.UpdateStatus(IdNr, valgstatus);
                 if (isUpdated)
                 {
-                    Console.WriteLine($"saken med id: {IdNr} har blitt oppdatert");  
+                    Console.WriteLine($"saken med id: {IdNr} har blitt oppdatert");
                 }
                 else
                 {
@@ -121,7 +91,7 @@ while (valg != "0")
         else
         {
             Console.WriteLine("Ugyldig Id.");
-        } 
+        }
     }
 
 
@@ -140,13 +110,13 @@ while (valg != "0")
             Console.WriteLine($"Det har skjedd en feil: {ex.Message}");
         }
 
-        
+
     }
 
 
     void HandleDeleteTicket()
     {
-        
+
         Console.WriteLine("Hva er ID-en til saken du vil slette");
         string? idVariable = Console.ReadLine();
 
@@ -163,7 +133,7 @@ while (valg != "0")
                 {
                     Console.WriteLine($"saken med ID: {IdNr} ble IKKE funnet");
                 }
-                
+
             }
             catch (SqliteException ex)
             {

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "I7HIyqcRplE=",
+  "dgSpecHash": "H4qUfcza+ns=",
   "success": true,
-  "projectFilePath": "C:\\DEV\\C#\\TicketSystem\\TicketSystem.csproj",
+  "projectFilePath": "D:\\DEV\\CSharp\\TicketSystem\\TicketSystem.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\iamdu\\.nuget\\packages\\microsoft.data.sqlite\\10.0.10\\microsoft.data.sqlite.10.0.10.nupkg.sha512",
     "C:\\Users\\iamdu\\.nuget\\packages\\microsoft.data.sqlite.core\\10.0.10\\microsoft.data.sqlite.core.10.0.10.nupkg.sha512",
@@ -16,9 +16,9 @@
       "code": "NU1903",
       "level": "Warning",
       "message": "Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.11 has a known high severity vulnerability, https://github.com/advisories/GHSA-2m69-gcr7-jv3q",
-      "projectPath": "C:\\DEV\\C#\\TicketSystem\\TicketSystem.csproj",
+      "projectPath": "D:\\DEV\\CSharp\\TicketSystem\\TicketSystem.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\DEV\\C#\\TicketSystem\\TicketSystem.csproj",
+      "filePath": "D:\\DEV\\CSharp\\TicketSystem\\TicketSystem.csproj",
       "libraryId": "SQLitePCLRaw.lib.e_sqlite3",
       "targetGraphs": [
         "net10.0"

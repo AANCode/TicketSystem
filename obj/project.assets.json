@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 3,
   "targets": {
     "net10.0": {
       "Microsoft.Data.Sqlite/10.0.10": {
@@ -312,11 +312,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\DEV\\C#\\TicketSystem\\TicketSystem.csproj",
+      "projectUniqueName": "D:\\DEV\\CSharp\\TicketSystem\\TicketSystem.csproj",
       "projectName": "TicketSystem",
-      "projectPath": "C:\\DEV\\C#\\TicketSystem\\TicketSystem.csproj",
+      "projectPath": "D:\\DEV\\CSharp\\TicketSystem\\TicketSystem.csproj",
       "packagesPath": "C:\\Users\\iamdu\\.nuget\\packages\\",
-      "outputPath": "C:\\DEV\\C#\\TicketSystem\\obj\\",
+      "outputPath": "D:\\DEV\\CSharp\\TicketSystem\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\iamdu\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -329,7 +329,6 @@
       },
       "frameworks": {
         "net10.0": {
-          "framework": "net10.0",
           "targetAlias": "net10.0",
           "projectReferences": {}
         }
@@ -344,11 +343,10 @@
         "auditLevel": "low",
         "auditMode": "all"
       },
-      "SdkAnalysisLevel": "10.0.300"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net10.0": {
-        "framework": "net10.0",
         "targetAlias": "net10.0",
         "dependencies": {
           "Microsoft.Data.Sqlite": {
@@ -372,7 +370,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.302/PortableRuntimeIdentifierGraph.json",
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.204/PortableRuntimeIdentifierGraph.json",
         "packagesToPrune": {
           "Microsoft.CSharp": "(,4.7.32767]",
           "Microsoft.VisualBasic": "(,10.4.32767]",
