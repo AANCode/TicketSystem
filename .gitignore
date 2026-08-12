@@ -1,0 +1,61 @@
+# OS and editor artifacts
+.DS_Store
+Thumbs.db
+.vs/
+.vscode/
+.idea/
+*.swp
+*.swo
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+*.iml
+
+# Build outputs and intermediate files
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+build/
+out/
+dist/
+TestResults/
+coverage/
+*.coverage
+*.coveragexml
+
+# .NET package and project artifacts
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+*.pdb
+*.cache
+*.deps.json
+*.runtimeconfig.json
+*.runtimeconfig.dev.json
+*.AssemblyInfo.cs
+*.GeneratedMSBuildEditorConfig.editorconfig
+
+# Local database and data files
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.db3
+support.db
+
+# Logs and temp files
+*.log
+*.tmp
+*.temp
+*.pid
+*.seed
+
+# User secrets and local config
+secrets.json
+appsettings.Development.json
