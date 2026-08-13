@@ -27,4 +27,37 @@ public class ConsoleView
         string id = Console.ReadLine();
         return id;
     }
+
+
+
+
+
+
+    void PrintStatusMenu()
+    {
+        foreach (var status in Enum.GetValues<TicketStatus>())
+        {
+            Console.WriteLine($"{(int)status} = {status}");
+        }
+    }
+
+    public TicketStatus GetValidStatusFromUser()
+    {
+        while (true)
+        {
+            Console.WriteLine($"Velg status:");
+            PrintStatusMenu();
+            string userInput = Console.ReadLine();
+
+            if (int.TryParse(userInput, out int statusNr) && Enum.IsDefined(typeof(TicketStatus), statusNr))
+            {
+                return (TicketStatus)statusNr;
+            }
+            else
+            {
+                Console.WriteLine("Ugyldig status, Du må velge et av de gyldige altenativene");
+            }
+        }
+
+    }
 }

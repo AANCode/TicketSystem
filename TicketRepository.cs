@@ -68,10 +68,10 @@ public class TicketRepository
 
     public List<Ticket> GetAllTickets()
     {
-        
+
         using SqliteConnection connection = GetConnection();
 
-        string readersql =@"
+        string readersql = @"
             SELECT* FROM Tickets;
         ";
 
@@ -89,7 +89,7 @@ public class TicketRepository
                 Status = (TicketStatus)Convert.ToInt32(reader["Status"])
             };
 
-            tickets.Add(ticket);  
+            tickets.Add(ticket);
         }
 
         return tickets;
@@ -111,5 +111,5 @@ public class TicketRepository
         return rowsAffected > 0;
     }
 
-    
+
 }
