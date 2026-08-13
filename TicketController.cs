@@ -2,9 +2,10 @@ using Microsoft.Data.Sqlite;
 
 public class TicketController
 {
-    private TicketRepository repository;
-    private ConsoleView consoleView;
-    public TicketController(TicketRepository repository, ConsoleView consoleView)
+    ITicketRepository repository;
+    IView consoleView;
+
+    public TicketController(ITicketRepository repository, IView consoleView)
     {
         this.repository = repository;
         this.consoleView = consoleView;
@@ -52,109 +53,109 @@ public class TicketController
                         }
                         else
                         {
-                           consoleView.ShowErrorMessage($"Ugylidig valg"); 
+                            consoleView.ShowErrorMessage($"Ugylidig valg");
                         }
-                    break;
+                        break;
                     }
             }
 
 
-            
+
         }
     }
 
-        void HandleCreateTicket()
+    void HandleCreateTicket()
+    {
+        string? titleVariable = consoleView.GetTicketTitle();
+        string? descriptionVariable = consoleView.GetTicketDescription();
+
+
+        try
         {
-            string? titleVariable = consoleView.GetTicketTitle();
-            string? descriptionVariable = consoleView.GetTicketDescription();
+            TicketStatus valgstatus = consoleView.GetValidStatusFromUser();
+            repository.AddTicket(titleVariable, descriptionVariable, valgstatus);
+            consoleView.ShowSuccessMessage("Saken har blitt opprettet");
+        }
+        catch (SqliteException ex)
+        {
+            consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
+        }
+    }
 
 
+    void HandleUpdateTicket()
+    {
+        string? idVariable = consoleView.GetTicketId();
+
+
+        if (int.TryParse(idVariable, out int IdNr))
+        {
             try
             {
                 TicketStatus valgstatus = consoleView.GetValidStatusFromUser();
-                repository.AddTicket(titleVariable, descriptionVariable, valgstatus);
-                consoleView.ShowSuccessMessage("Saken har blitt opprettet");
+                bool isUpdated = repository.UpdateStatus(IdNr, valgstatus);
+                if (isUpdated)
+                {
+                    consoleView.ShowSuccessMessage($"saken med id: {IdNr} har blitt oppdatert");
+                }
+                else
+                {
+                    consoleView.ShowErrorMessage($"saken med ID: {IdNr} ble IKKE funnet");
+                }
             }
             catch (SqliteException ex)
             {
                 consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
             }
         }
-
-
-        void HandleUpdateTicket()
+        else
         {
-            string? idVariable = consoleView.GetTicketId();
-
-
-            if (int.TryParse(idVariable, out int IdNr))
-            {
-                try
-                {
-                    TicketStatus valgstatus = consoleView.GetValidStatusFromUser();
-                    bool isUpdated = repository.UpdateStatus(IdNr, valgstatus);
-                    if (isUpdated)
-                    {
-                        consoleView.ShowSuccessMessage($"saken med id: {IdNr} har blitt oppdatert");
-                    }
-                       else
-                    {
-                        consoleView.ShowErrorMessage($"saken med ID: {IdNr} ble IKKE funnet");
-                    }
-                }
-                catch (SqliteException ex)
-                {
-                    consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
-                }
-            }
-            else
-            {
-                consoleView.ShowErrorMessage("Ugyldig Id.");
-            }
+            consoleView.ShowErrorMessage("Ugyldig Id.");
         }
+    }
 
 
-        void HandleShowAllTickets()
+    void HandleShowAllTickets()
+    {
+        try
+        {
+            var tickets = repository.GetAllTickets();
+            consoleView.ShowTickets(tickets);
+        }
+        catch (SqliteException ex)
+        {
+            consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
+        }
+    }
+
+
+    void HandleDeleteTicket()
+    {
+        string? idVariable = consoleView.GetTicketId();
+
+        if (int.TryParse(idVariable, out int IdNr))
         {
             try
             {
-                var tickets = repository.GetAllTickets();
-                consoleView.ShowTickets(tickets);
+                bool isDeleted = repository.DeleteTicket(IdNr);
+                if (isDeleted)
+                {
+                    consoleView.ShowSuccessMessage($"saken med ID: {IdNr} har blitt slettet");
+                }
+                else
+                {
+                    consoleView.ShowErrorMessage($"saken med ID: {IdNr} ble IKKE funnet");
+                }
+
             }
             catch (SqliteException ex)
             {
                 consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
             }
         }
-
-
-        void HandleDeleteTicket()
+        else
         {
-            string? idVariable = consoleView.GetTicketId();
-
-            if (int.TryParse(idVariable, out int IdNr))
-            {
-                try
-                {
-                    bool isDeleted = repository.DeleteTicket(IdNr);
-                    if (isDeleted)
-                    {
-                        consoleView.ShowSuccessMessage($"saken med ID: {IdNr} har blitt slettet");
-                    }
-                    else
-                    {
-                        consoleView.ShowErrorMessage($"saken med ID: {IdNr} ble IKKE funnet");
-                    }
-
-                }
-                catch (SqliteException ex)
-                {
-                    consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
-                }
-            }
-            else
-            {
-                consoleView.ShowErrorMessage("Ugyldig inndata");
-            }
+            consoleView.ShowErrorMessage("Ugyldig inndata");
         }
+    }
 }

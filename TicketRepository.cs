@@ -1,7 +1,7 @@
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualBasic;
 
-public class TicketRepository
+public class TicketRepository : ITicketRepository
 {
     private readonly string _connectionString = "Data Source=support.db";
     private SqliteConnection GetConnection()

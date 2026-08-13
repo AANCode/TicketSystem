@@ -1,10 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using Microsoft.Data.Sqlite;
-
-var repository = new TicketRepository();
+﻿
+ITicketRepository repository = new TicketRepository();
 repository.InitializeDatabase();
 
-var consoleView = new ConsoleView();
+IView consoleView = new ConsoleView();
 
-var controller  =new TicketController(repository, consoleView);
+var controller = new TicketController(repository, consoleView);
 controller.Run();

@@ -1,4 +1,4 @@
-public class ConsoleView
+public class ConsoleView : IView
 {
     public string GetMainMenuChoice()
     {
@@ -28,20 +28,6 @@ public class ConsoleView
         return id;
     }
 
-    public void ShowSuccessMessage(string successMessage)
-    {
-        Console.WriteLine($"{successMessage}");
-    }
-
-    public void ShowErrorMessage(string successMessage)
-    {
-        Console.WriteLine($"{successMessage}");
-    }
-
-
-
-
-
     public void ShowTickets(List<Ticket> tickets)
     {
         foreach (var ticket in tickets)
@@ -51,6 +37,16 @@ public class ConsoleView
     }
 
 
+
+    public void ShowSuccessMessage(string successMessage)
+    {
+        Console.WriteLine($"{successMessage}");
+    }
+
+    public void ShowErrorMessage(string successMessage)
+    {
+        Console.WriteLine($"{successMessage}");
+    }
 
 
 
@@ -81,4 +77,6 @@ public class ConsoleView
         }
 
     }
+
+
 }
