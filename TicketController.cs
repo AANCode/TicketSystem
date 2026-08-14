@@ -2,8 +2,8 @@ using Microsoft.Data.Sqlite;
 
 public class TicketController
 {
-    ITicketRepository repository;
-    IView consoleView;
+    private readonly ITicketRepository repository;
+    private readonly IView consoleView;
 
     public TicketController(ITicketRepository repository, IView consoleView)
     {
@@ -45,6 +45,12 @@ public class TicketController
                         HandleDeleteTicket();
                         break;
                     }
+
+                case "5":
+                    {
+                        HandleShowTicketByID();
+                        break;
+                    }
                 default:
                     {
                         if (valg == "0")
@@ -66,14 +72,14 @@ public class TicketController
 
     void HandleCreateTicket()
     {
-        string? titleVariable = consoleView.GetTicketTitle();
-        string? descriptionVariable = consoleView.GetTicketDescription();
+        string? title = consoleView.GetTicketTitle();
+        string? description = consoleView.GetTicketDescription();
 
 
         try
         {
             TicketStatus valgstatus = consoleView.GetValidStatusFromUser();
-            repository.AddTicket(titleVariable, descriptionVariable, valgstatus);
+            repository.AddTicket(title, description, valgstatus);
             consoleView.ShowSuccessMessage("Saken har blitt opprettet");
         }
         catch (SqliteException ex)
@@ -85,32 +91,24 @@ public class TicketController
 
     void HandleUpdateTicket()
     {
-        string? idVariable = consoleView.GetTicketId();
+        int id = consoleView.GetValidTicketId();
 
-
-        if (int.TryParse(idVariable, out int IdNr))
+        try
         {
-            try
+            TicketStatus valgstatus = consoleView.GetValidStatusFromUser();
+            bool isUpdated = repository.UpdateStatus(id, valgstatus);
+            if (isUpdated)
             {
-                TicketStatus valgstatus = consoleView.GetValidStatusFromUser();
-                bool isUpdated = repository.UpdateStatus(IdNr, valgstatus);
-                if (isUpdated)
-                {
-                    consoleView.ShowSuccessMessage($"saken med id: {IdNr} har blitt oppdatert");
-                }
-                else
-                {
-                    consoleView.ShowErrorMessage($"saken med ID: {IdNr} ble IKKE funnet");
-                }
+                consoleView.ShowSuccessMessage($"saken med ID: {id} har blitt oppdatert");
             }
-            catch (SqliteException ex)
+            else
             {
-                consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
+                consoleView.ShowErrorMessage($"saken med ID: {id} ble IKKE funnet");
             }
         }
-        else
+        catch (SqliteException ex)
         {
-            consoleView.ShowErrorMessage("Ugyldig Id.");
+            consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
         }
     }
 
@@ -129,33 +127,50 @@ public class TicketController
     }
 
 
+    void HandleShowTicketByID()
+    {
+        int id = consoleView.GetValidTicketId();
+        try
+        {
+            var ticket = repository.GetTicketById(id);
+            if(ticket == null)
+            {
+                consoleView.ShowErrorMessage("Saken finnes ikke");
+            }
+            else
+            {
+                consoleView.ShowTicket(ticket);
+            }
+            
+        }
+        catch (SqliteException ex)
+        {
+           consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
+        }
+        
+    }
+    
+
     void HandleDeleteTicket()
     {
-        string? idVariable = consoleView.GetTicketId();
+        int id = consoleView.GetValidTicketId();
 
-        if (int.TryParse(idVariable, out int IdNr))
+        try
         {
-            try
+            bool isDeleted = repository.DeleteTicket(id);
+            if (isDeleted)
             {
-                bool isDeleted = repository.DeleteTicket(IdNr);
-                if (isDeleted)
-                {
-                    consoleView.ShowSuccessMessage($"saken med ID: {IdNr} har blitt slettet");
-                }
-                else
-                {
-                    consoleView.ShowErrorMessage($"saken med ID: {IdNr} ble IKKE funnet");
-                }
+                consoleView.ShowSuccessMessage($"saken med ID: {id} har blitt slettet");
+            }
+            else
+            {
+                consoleView.ShowErrorMessage($"saken med ID: {id} ble IKKE funnet");
+            }
 
-            }
-            catch (SqliteException ex)
-            {
-                consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
-            }
         }
-        else
+        catch (SqliteException ex)
         {
-            consoleView.ShowErrorMessage("Ugyldig inndata");
+            consoleView.ShowErrorMessage($"Det har skjedd en feil: {ex.Message}");
         }
     }
 }

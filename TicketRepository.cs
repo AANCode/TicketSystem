@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Microsoft.Data.Sqlite;
 using Microsoft.VisualBasic;
 
@@ -93,6 +94,35 @@ public class TicketRepository : ITicketRepository
         }
 
         return tickets;
+    }
+
+
+    public Ticket? GetTicketById(int id)
+    {
+        using SqliteConnection connection = GetConnection();
+
+        string readersql = @"
+            SELECT * FROM Tickets WHERE Id = @id;
+            ";
+        
+        using var singelSelectCommand = new SqliteCommand (readersql, connection);
+        singelSelectCommand.Parameters.AddWithValue("@id", id);
+        using var reader = singelSelectCommand.ExecuteReader();
+
+        if (!reader.Read())
+        {
+            return null;
+        }
+
+        var ticket = new Ticket
+        {
+            Id = Convert.ToInt32(reader["Id"]),
+            Title = reader["Title"].ToString(),
+            Description = reader["Description"].ToString(),
+            Status = (TicketStatus)Convert.ToInt32(reader["Status"])
+        };
+
+        return ticket;
     }
 
 
