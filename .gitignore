@@ -13,6 +13,8 @@ Thumbs.db
 *.iml
 
 # Build outputs and intermediate files
+bin/
+obj/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
